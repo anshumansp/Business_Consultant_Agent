@@ -1,0 +1,6 @@
+/* Add this custom style to your CSS or styles file */
+.custom-textfield.MuiInputBase-colorPrimary .MuiOutlinedInput-notchedOutline {
+    outline: none;
+    border: none;
+  }
+  

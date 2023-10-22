@@ -1,38 +1,64 @@
-import React from 'react';
-import { Box, TextField } from '@mui/material';
-import TelegramIcon from '@mui/icons-material/Telegram';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import AddIcon from '@mui/icons-material/Add';
+import React from "react";
+import { Box, TextField, styled } from "@mui/material";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import AddIcon from "@mui/icons-material/Add";
 
 const Footer = () => {
   const inputStyle = {
-    width: '60%',
-    backgroundColor: '#FFF',
-    position: 'fixed',
-    bottom: '10px',
-    left: '20%',
-    right: '20%',
-    borderRadius: '8px',
-    padding: '8px',
+    width: "60%",
+    backgroundColor: "#FFF",
+    position: "fixed",
+    bottom: "10px",
+    left: "20%",
+    right: "20%",
+    borderRadius: "8px",
+    padding: "8px",
   };
 
   const adornmentStyle = {
-    marginRight: '10px',
+    marginRight: "10px",
     display: "flex",
-    cursor: "pointer"
+    cursor: "pointer",
   };
+
+  const StyledTextField = styled(TextField)`
+    & label.Mui-focused {
+      border-color: white;
+    }
+    & .MuiOutlinedInput-root {
+      &.Mui-focused fieldset {
+        border-color: #F2F2F2;
+        border: "none"
+      }
+    }
+    &:hover fieldset {
+      border-color: transparent; /* Remove hover border color */
+    }
+  `;
 
   return (
     <Box>
-      <TextField
+      <StyledTextField
         id="outlined-basic"
         placeholder="Type your message here..."
         variant="outlined"
-        style={inputStyle}
+        sx={{
+          border: "none",
+          outline: "none",
+          "& .MuiInput-root": {
+            border: "none",
+            borderRadius: "8px",
+            "&:focus": {
+              border: "none",
+              outline: "none",
+            },
+          },
+        }}
         InputProps={{
           startAdornment: (
             <div style={adornmentStyle}>
-              <ExpandLessIcon color="action" sx={{marginRight: "10px"}} />
+              <ExpandLessIcon color="action" sx={{ marginRight: "10px" }} />
               <AddIcon color="action" />
             </div>
           ),
@@ -42,12 +68,10 @@ const Footer = () => {
             </div>
           ),
           style: {
-            backgroundColor: '#FFF',
-            outline: "disabled",
-            borderRadius: "10px",
-            "& fieldset": { border: "none" },
+            backgroundColor: "#fff",
           },
         }}
+        style={inputStyle}
       />
     </Box>
   );
