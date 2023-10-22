@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { pink } from "@mui/material/colors";
 
-const lightPink = pink[50];
 const darkPink = pink[500];
 const StyledBox = styled(Box)({
   marginBlock: "30px",

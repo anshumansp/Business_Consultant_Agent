@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import image from "../assets/Netaji-logo.png";
 import { pink } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 
 const lightPink = pink[50];
 const darkPink = pink[500];
@@ -20,7 +21,15 @@ const StyledBox = styled(Box)({
   width: "100vw",
 });
 
+
 const Header = () => {
+  const navigate = useNavigate();
+  const handleClick = ( ) => {
+    navigate("/phone")
+  }
+  const handleChatClick = ( ) => {
+    navigate("/")
+  }
   return (
     <StyledBox>
       {/* Box-1 */}
@@ -58,6 +67,7 @@ const Header = () => {
           }}
           disableRipple
           disableTouchRipple
+          onClick={handleChatClick}
         >
           Chat
         </Button>
@@ -70,6 +80,7 @@ const Header = () => {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 500,
           }}
+          onClick={handleClick}
         >
           Phone
         </Typography>
