@@ -43,7 +43,9 @@ const Footer = () => {
           ),
           style: {
             backgroundColor: '#FFF',
-            outline: "disabled"
+            outline: "disabled",
+            borderRadius: "10px",
+            "& fieldset": { border: "none" },
           },
         }}
       />

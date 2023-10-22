@@ -121,7 +121,6 @@ const Header = () => {
         </Button>
         <IconButton
           sx={{
-            padding: "0",
             margin: "0",
             backgroundColor: darkPink,
             color: "#fff",
