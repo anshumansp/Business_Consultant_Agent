@@ -10,6 +10,9 @@ const StyledBox = styled(Box)({
   height: "10vh",
   padding: "2vh 22vw",
   display: "flex",
+  "@media (max-width: 768px)": {
+    padding: "2vh 10vw", // Adjust padding for smaller screens
+  },
 });
 
 const Home = () => {
@@ -56,6 +59,9 @@ const Home = () => {
             sx={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "16px",
+              "@media (max-width: 768px)": {
+                fontSize: "14px", // Adjust font size for smaller screens
+              },
             }}
           >
             What is your Name?
