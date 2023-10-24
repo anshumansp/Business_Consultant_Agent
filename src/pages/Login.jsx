@@ -1,15 +1,19 @@
-import { Box, Checkbox, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack, TextField, Typography, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { pink } from "@mui/material/colors";
 
-const Login = ({setShowLayout}) => {
+const Login = ({ setShowLayout }) => {
+  const darkPink = pink[500];
+  const lightPink = pink[700];
   const navigate = useNavigate();
   const [creds, setCreds] = useState({
     email: "",
     password: "",
   });
+
   const handleChange = (e) => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
   };
@@ -25,143 +29,104 @@ const Login = ({setShowLayout}) => {
       const token = user.user.accessToken;
       localStorage.setItem("accessToken", token);
       setCreds({
-          email: "",
-          password: "",
-        });
-        setShowLayout(true);
-        navigate("/");
+        email: "",
+        password: "",
+      });
+      setShowLayout(true);
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }
+  };
 
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if(token) {
+        navigate("/")
+    } 
+  }, []);
+
   return (
-    <Stack py={16} justifyContent={"center"} alignItems={"center"}>
+    <Stack
+      py={{ xs: 6, md: 12, lg: 22 }}
+      px={{ xs: 2, md: 4, lg: 8 }}
+      justifyContent="center"
+      alignItems="center"
+    >
       <Box
-        flexDirection={"column"}
-        alignItems={"center"}
-        display={"flex"}
-        justifyContent={"center"}
-        width={"40%"}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width={{ xs: "100%", md: "80%", lg: "50%" }}
       >
-        {/* Box for Heading */}
-        <Box textAlign={"center"} px={10}>
-          <Typography
-            sx={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: "30px",
-              fontWeight: 600,
-              marginBottom: "16px",
-            }}
-          >
-            My Chatbot Account
-          </Typography>
-          <Typography
-            sx={{
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: "16px",
-              fontWeight: 400,
-              color: "#616161",
-              lineHeight: "30px",
-            }}
-          >
-            <span
-              style={{
-                fontWeight: 800,
-                color: "#000",
-              }}
-            >
-              Log in
-            </span>{" "}
-            to your ChatBot application.
-          </Typography>
-        </Box>
+        <Typography
+          variant="h4"
+          fontWeight={600}
+          mb={2}
+          fontFamily="'Plus Jakarta Sans', sans-serif"
+        >
+          My Chatbot Account
+        </Typography>
+        <Typography
+          variant="body1"
+          color="#616161"
+          fontWeight={400}
+          fontSize="16px"
+          fontFamily="'Plus Jakarta Sans', sans-serif"
+          lineHeight="30px"
+        >
+          <span style={{ fontWeight: 800, color: "#000" }}>Log in</span> to your
+          ChatBot application.
+        </Typography>
 
-        <Box flexDirection={"column"} width={"100%"} pt={4}>
+        <Box mt={4} width="100%">
           <TextField
-            sx={{
-              width: "100%",
-              marginBottom: "20px",
-              backgroundColor: "#F2F2F2",
-              "& fieldset": { border: "none" },
-            }}
-            id="outlined-email-input"
+            fullWidth
+            margin="normal"
+            variant="outlined"
             placeholder="Email"
             type="email"
             name="email"
             value={creds.email}
             onChange={handleChange}
-            autoComplete="current-password"
           />
           <TextField
-            sx={{
-              width: "100%",
-              marginBottom: "20px",
-              backgroundColor: "#F2F2F2",
-              "& fieldset": { border: "none" },
-            }}
-            id="outlined-password-input"
+            fullWidth
+            margin="normal"
+            variant="outlined"
             placeholder="Password"
             type="password"
             name="password"
             value={creds.password}
             onChange={handleChange}
-            autoComplete="current-password"
           />
         </Box>
       </Box>
 
       <Box
         pt={2}
-        flexDirection={"column"}
-        display={"flex"}
-        style={{
-          width: "20%",
-          textAlign: "center",
-        }}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        width={{ xs: "100%", md: "40%", lg: "30%" }}
       >
-        <Link
-          style={{
-            textDecoration: "none",
-            backgroundColor: "#EB1B22",
-            padding: "15px 0",
-            color: "#fff",
-            borderRadius: 0,
-            textTransform: "inherit",
-            fontSize: "18px",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            display: "block",
-            "&:hover": {
-              backgroundColor: "#8C8A8C",
-            },
-          }}
+        <Button
+          component={Link}
+          to="/"
+          variant="contained"
+          size="large"
           onClick={handleLogin}
+          sx={{ width: "100%", backgroundColor: darkPink, "&:hover" : {
+            backgroundColor: lightPink,
+          } }}
         >
           Login
-        </Link>
-        <Typography
-          style={{
-            marginTop: "24px",
-            color: "#616161",
-            fontSize: "16px",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 400,
-            display: "block",
-            "&:hover": {
-              backgroundColor: "#8C8A8C",
-            },
-          }}
-        >
+        </Button>
+        <Typography variant="body1" color="#616161" mt={2} textAlign="center">
           Don't have an account?{" "}
-          <Link
-            style={{
-              color: "#000",
-            }}
-            to="/signup"
-          >
-            {" "}
-            Signup Here{" "}
+          <Link to="/signup" style={{ color: "#000" }}>
+            Signup Here
           </Link>
         </Typography>
       </Box>
