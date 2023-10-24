@@ -125,7 +125,6 @@ const Header = () => {
             display: { xs: "none", md: "flex" },
             marginRight: "20px",
             cursor: "pointer",
-            display: "flex",
             alignItems: "center",
             "&:hover": {
               backgroundColor: lightPink,
@@ -160,7 +159,6 @@ const Header = () => {
             display: { xs: "none", md: "flex" },
             color: "#fff",
             fontSize: "16px",
-            display: { xs: "none", md: "flex" },
             padding: "8px",
             "&:hover": {
               backgroundColor: darkPink,

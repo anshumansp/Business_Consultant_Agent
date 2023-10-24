@@ -11,7 +11,7 @@ const StyledBox = styled(Box)({
   padding: "2vh 22vw",
   display: "flex",
   "@media (max-width: 768px)": {
-    padding: "2vh 10vw", // Adjust padding for smaller screens
+    padding: "2vh 10vw",
   },
 });
 
@@ -60,7 +60,7 @@ const Home = () => {
               fontFamily: "'Inter', sans-serif",
               fontSize: "16px",
               "@media (max-width: 768px)": {
-                fontSize: "14px", // Adjust font size for smaller screens
+                fontSize: "14px",
               },
             }}
           >

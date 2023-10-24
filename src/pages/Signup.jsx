@@ -80,7 +80,7 @@ const Signup = ({ setShowLayout }) => {
           ChatBot application.
         </Typography>
 
-        <Box mt={4} width="100%">
+        <Box mt={4} width="80%">
           <TextField
             fullWidth
             margin="normal"
@@ -118,7 +118,7 @@ const Signup = ({ setShowLayout }) => {
           size="large"
           onClick={handleSignup}
           sx={{
-            width: "100%",
+            width: "80%",
             backgroundColor: darkPink,
             "&:hover": { backgroundColor: lightPink },
           }}

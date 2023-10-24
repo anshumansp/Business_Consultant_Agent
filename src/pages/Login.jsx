@@ -80,7 +80,7 @@ const Login = ({ setShowLayout }) => {
           ChatBot application.
         </Typography>
 
-        <Box mt={4} width="100%">
+        <Box mt={4} width="80%">
           <TextField
             fullWidth
             margin="normal"
@@ -117,7 +117,7 @@ const Login = ({ setShowLayout }) => {
           variant="contained"
           size="large"
           onClick={handleLogin}
-          sx={{ width: "100%", backgroundColor: darkPink, "&:hover" : {
+          sx={{ width: "80%", backgroundColor: darkPink, "&:hover" : {
             backgroundColor: lightPink,
           } }}
         >
