@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = () => {
+const Login = ({setShowLayout}) => {
   const navigate = useNavigate();
   const [creds, setCreds] = useState({
     email: "",
@@ -14,10 +14,27 @@ const Login = () => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = () => {
-    console.log(creds)
-  }
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
+    try {
+      const email = creds.email;
+      const password = creds.password;
+
+      const user = await signInWithEmailAndPassword(auth, email, password);
+      const token = user.user.accessToken;
+      localStorage.setItem("accessToken", token);
+      setCreds({
+          email: "",
+          password: "",
+        });
+        setShowLayout(true);
+        navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    };
   return (
     <Stack py={16} justifyContent={"center"} alignItems={"center"}>
       <Box

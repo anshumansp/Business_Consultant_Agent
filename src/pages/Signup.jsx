@@ -1,5 +1,5 @@
-import { Box, Checkbox, Stack, TextField, Typography } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Box, Stack, TextField, Typography } from "@mui/material";
+import React, { useState, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -20,18 +20,18 @@ const Signup = ({setShowLayout}) => {
     try {
       const email = creds.email;
       const password = creds.password;
-      setCreds({
-        email: "",
-        password: "",
-      });
       const user = await createUserWithEmailAndPassword(auth, email, password);
       const token = user.user.accessToken;
-      console.log(token)
       localStorage.setItem("accessToken", token);
       setShowLayout(true);
       navigate("/");
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setCreds({
+        email: "",
+        password: "",
+      });
     }
   };
 
