@@ -36,8 +36,8 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/phone" element={<Phone />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login setShowLayout={setShowLayout} />} />
+        <Route path="/signup" element={<Signup setShowLayout={setShowLayout} />} />
       </Routes>
       {showLayout && <Footer />}
     </>

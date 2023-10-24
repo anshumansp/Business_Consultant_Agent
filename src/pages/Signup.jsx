@@ -2,26 +2,42 @@ import { Box, Checkbox, Stack, TextField, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-const Signup = () => {
+const Signup = ({setShowLayout}) => {
   const navigate = useNavigate();
   const [creds, setCreds] = useState({
     email: "",
-    username: "",
     password: "",
   });
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const handleChange = (e) => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = () => {
-    console.log(creds)
-  }
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    try {
+      const email = creds.email;
+      const password = creds.password;
+      setCreds({
+        email: "",
+        password: "",
+      });
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      const token = user.user.accessToken;
+      console.log(token)
+      localStorage.setItem("accessToken", token);
+      setShowLayout(true);
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
 
   return (
-    <Stack py={16} justifyContent={"center"} alignItems={"center"}>
+    <Stack py={22} justifyContent={"center"} alignItems={"center"}>
       <Box
         flexDirection={"column"}
         alignItems={"center"}
@@ -75,21 +91,6 @@ const Signup = () => {
             type="email"
             name="email"
             value={creds.email}
-            onChange={handleChange}
-            autoComplete="current-password"
-          />
-          <TextField
-            sx={{
-              width: "100%",
-              marginBottom: "20px",
-              backgroundColor: "#F2F2F2",
-              "& fieldset": { border: "none" },
-            }}
-            id="outlined-username-email-input"
-            placeholder="Username"
-            type="text"
-            name="username"
-            value={creds.username}
             onChange={handleChange}
             autoComplete="current-password"
           />

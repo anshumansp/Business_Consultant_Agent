@@ -7,10 +7,9 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
   const navigate = useNavigate();
   const [creds, setCreds] = useState({
-    username: "",
+    email: "",
     password: "",
   });
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const handleChange = (e) => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
   };
@@ -69,11 +68,11 @@ const Login = () => {
               backgroundColor: "#F2F2F2",
               "& fieldset": { border: "none" },
             }}
-            id="outlined-username-email-input"
-            placeholder="Username"
-            type="text"
-            name="username"
-            value={creds.username}
+            id="outlined-email-input"
+            placeholder="Email"
+            type="email"
+            name="email"
+            value={creds.email}
             onChange={handleChange}
             autoComplete="current-password"
           />
