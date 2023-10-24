@@ -1,9 +1,11 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { useState } from "react";
 import image from "../assets/Netaji-logo.png";
 import { pink } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const lightPink = pink[50];
 const darkPink = pink[500];
@@ -21,17 +23,36 @@ const StyledBox = styled(Box)({
   width: "100vw",
 });
 
-
 const Header = () => {
   const navigate = useNavigate();
-  const handleClick = ( ) => {
-    navigate("/phone")
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handlePhoneClick = () => {
+    navigate("/phone");
+  };
+  
+  const handleChatClick = () => {
+    navigate("/");
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    localStorage.removeItem("accessToken");
+    navigate("/login");
   }
-  const handleChatClick = ( ) => {
-    navigate("/")
-  }
+
   return (
     <StyledBox>
+
       {/* Box-1 */}
       <Box width={"100%"} display={"flex"} alignItems={"center"}>
         {/* Image */}
@@ -80,7 +101,7 @@ const Header = () => {
             fontFamily: "'Inter', sans-serif",
             fontWeight: 500,
           }}
-          onClick={handleClick}
+          onClick={handlePhoneClick}
         >
           Phone
         </Typography>
@@ -130,6 +151,7 @@ const Header = () => {
             New Chat
           </Typography>
         </Button>
+
         <IconButton
           sx={{
             margin: "0",
@@ -141,9 +163,28 @@ const Header = () => {
               backgroundColor: darkPink,
             },
           }}
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={handleClick}
         >
           <i className="fa-solid fa-user"></i>
         </IconButton>
+
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
       </Box>
     </StyledBox>
   );
