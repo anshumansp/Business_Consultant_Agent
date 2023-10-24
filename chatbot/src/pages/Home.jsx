@@ -1,8 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useEffect } from "react";
+import React from "react";
 import { pink } from "@mui/material/colors";
-import { useNavigate } from "react-router-dom";
 
 const darkPink = pink[500];
 const StyledBox = styled(Box)({
@@ -13,13 +12,6 @@ const StyledBox = styled(Box)({
 });
 
 const Home = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const usertoken = localStorage.getItem("accessToken");
-    if (!usertoken) {
-      navigate("/login");
-    }
-  }, []);
   return (
     <Box sx={{ backgroundColor: "#F2F2F2" }}>
       <StyledBox>
