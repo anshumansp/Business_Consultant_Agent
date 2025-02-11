@@ -9,7 +9,7 @@
     "build": "npm ci && npm run lint",
     "clean": "rimraf dist",
     "build:prod": "npm run clean && npm run build",
-    "lint": "./node_modules/.bin/eslint . --ext .js",
+    "lint": "eslint . --ext .js",
     "format": "prettier --write \"**/*.{js,json}\"",
     "test": "jest",
     "serve": "node server.js"
