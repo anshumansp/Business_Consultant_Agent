@@ -1,8 +1,8 @@
 # BusinessTech Advisor AI
 
-![BusinessTech Advisor AI Interface](@chatbot.png)
+> An AI-powered business consultant using Deepseek Chat model, offering real-time expertise in strategy, tech, and management. Basically, this is a sophisticated AI-powered business and technology consulting platform that provides real-time advice on business strategy, market analysis, technical architecture, and project management.
 
-A sophisticated AI-powered business and technology consulting platform that provides real-time advice on business strategy, market analysis, technical architecture, and project management.
+![BusinessTech Advisor AI Interface](./assets/chatbot.png)
 
 ## Overview
 
