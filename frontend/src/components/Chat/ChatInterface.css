@@ -407,10 +407,20 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 0.95rem;
+  position: relative;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .auth-button:hover {
   opacity: 0.9;
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .auth-link {
@@ -471,4 +481,46 @@
 
 .social-auth-button:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+.auth-error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #d32f2f;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.loading-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-dots .dot {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out;
+}
+
+.loading-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+.auth-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.social-auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 } 

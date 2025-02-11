@@ -4,6 +4,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { theme } from "../../utils/theme";
 import "./ChatInterface.css";
+import { useNavigate } from "react-router-dom";
 
 // Icons (you can replace these with actual SVG icons)
 const ChatIcon = () => (
@@ -95,6 +96,15 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Check authentication on mount
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -212,6 +222,11 @@ const ChatInterface = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
+
   return (
     <div className="app-container">
       <aside className="sidebar">
@@ -237,7 +252,7 @@ const ChatInterface = () => {
           <button className="account-btn">
             <UserIcon /> Account
           </button>
-          <button className="logout-btn">
+          <button className="logout-btn" onClick={handleLogout}>
             <LogoutIcon /> Logout
           </button>
         </div>
