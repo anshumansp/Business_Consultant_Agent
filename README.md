@@ -58,6 +58,7 @@ BusinessTech Advisor AI is a modern web application that combines advanced AI ca
 - Node.js (v14.0.0 or higher)
 - npm or yarn
 - Deepseek API key
+- Firebase project credentials
 
 ## Installation
 
@@ -72,15 +73,42 @@ BusinessTech Advisor AI is a modern web application that combines advanced AI ca
    cd backend
    npm install
    ```
-   Create a `.env` file in the backend directory:
+   Copy the example environment file and update with your values:
+   ```bash
+   cp .env.example .env
+   ```
+   Required environment variables:
    ```env
-   DEEPSEEK_API_KEY=your_api_key_here
+   # Server Configuration
+   PORT=3001
+   NODE_ENV=development
+
+   # API Keys
+   DEEPSEEK_API_KEY=your_deepseek_api_key_here
    ```
 
 3. **Frontend Setup**
    ```bash
    cd frontend
    npm install
+   ```
+   Copy the example environment file and update with your values:
+   ```bash
+   cp .env.example .env
+   ```
+   Required environment variables:
+   ```env
+   # API Configuration
+   VITE_API_URL=http://localhost:3001
+
+   # Firebase Configuration
+   VITE_FIREBASE_API_KEY=your_api_key_here
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
+   VITE_FIREBASE_PROJECT_ID=your_project_id_here
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id_here
+   VITE_FIREBASE_APP_ID=your_app_id_here
+   VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id_here
    ```
 
 ## Configuration
@@ -128,8 +156,7 @@ businesstech-advisor/
 │   │   ├── components/
 │   │   │   ├── Chat/
 │   │   │   └── Auth/
-│   │   ├── utils/
-│   │   └── App.jsx
+│   │   │   └── App.jsx
 │   ├── package.json
 │   └── vite.config.js
 └── README.md
@@ -211,3 +238,17 @@ For support, please open an issue in the repository or contact the development t
 - Deepseek AI for providing the AI capabilities
 - React and Vite communities
 - Contributors and maintainers
+
+## Security Notes
+
+1. **Environment Variables**
+   - Never commit `.env` files to version control
+   - Always use `.env.example` files as templates
+   - Keep API keys and sensitive credentials secure
+   - Regularly rotate API keys and credentials
+
+2. **Firebase Configuration**
+   - Use appropriate Firebase security rules
+   - Implement proper authentication checks
+   - Enable only required Firebase services
+   - Monitor Firebase usage and costs
