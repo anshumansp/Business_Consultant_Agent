@@ -5,7 +5,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "npm install && npm run lint",
+    "clean": "rimraf dist",
+    "build:prod": "npm run clean && npm run build",
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write \"**/*.{js,json}\"",
+    "test": "jest",
+    "serve": "node server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -14,6 +21,11 @@
     "openai": "^4.24.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "supertest": "^6.3.4"
   }
 }
