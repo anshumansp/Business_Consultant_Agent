@@ -6,10 +6,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npm install && npm run lint",
+    "build": "npm ci && npm run lint",
     "clean": "rimraf dist",
     "build:prod": "npm run clean && npm run build",
-    "lint": "eslint . --ext .js",
+    "lint": "./node_modules/.bin/eslint . --ext .js",
     "format": "prettier --write \"**/*.{js,json}\"",
     "test": "jest",
     "serve": "node server.js"
@@ -27,5 +27,8 @@
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "supertest": "^6.3.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
