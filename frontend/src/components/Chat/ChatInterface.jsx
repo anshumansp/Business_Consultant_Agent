@@ -165,14 +165,27 @@ const ChatInterface = () => {
     try {
       const response = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream",
+        },
         body: JSON.stringify({
           messages: updatedMessages,
-          systemPrompt: "You are a helpful business and technology advisor.",
+          systemPrompt: systemPrompt,
         }),
       });
 
-      if (!response.ok) throw new Error(response.statusText);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
+        throw new Error(
+          `Server responded with ${response.status}: ${errorText}`
+        );
+      }
+
+      if (!response.body) {
+        throw new Error("ReadableStream not supported");
+      }
 
       const reader = response.body.getReader();
       let partialMessage = "";
@@ -184,23 +197,28 @@ const ChatInterface = () => {
         const chunk = new TextDecoder().decode(value);
         const lines = chunk.split("\n");
 
-        lines.forEach((line) => {
+        for (const line of lines) {
           if (line.startsWith("data: ")) {
             const data = line.slice(5);
             if (data === "[DONE]") return;
 
             try {
-              const { content } = JSON.parse(data);
-              partialMessage += content;
-              updateCurrentConversation([
-                ...updatedMessages,
-                { role: "assistant", content: partialMessage },
-              ]);
+              const { content, error } = JSON.parse(data);
+              if (error) {
+                throw new Error(error);
+              }
+              if (content) {
+                partialMessage += content;
+                updateCurrentConversation([
+                  ...updatedMessages,
+                  { role: "assistant", content: partialMessage },
+                ]);
+              }
             } catch (e) {
-              console.error("Error parsing SSE:", e);
+              console.error("Error parsing SSE:", e, "Raw data:", data);
             }
           }
-        });
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -208,7 +226,7 @@ const ChatInterface = () => {
         ...updatedMessages,
         {
           role: "assistant",
-          content: "I apologize, but I encountered an error. Please try again.",
+          content: `Error: ${error.message}. Please try again or contact support if the issue persists.`,
         },
       ]);
     } finally {
