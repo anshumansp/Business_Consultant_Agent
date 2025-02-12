@@ -87,6 +87,8 @@ const initialMessage = {
     "👋 Hello! I'm your AI Business and Technology Advisor. I can help you with: Business Strategy, Market Analysis, Technical Architecture, Project Management, How can I assist you today?",
 };
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const ChatInterface = () => {
   const [conversations, setConversations] = useState([
     { id: 1, title: "New Chat", messages: [initialMessage] },
@@ -161,7 +163,7 @@ const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/chat", {
+      const response = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
