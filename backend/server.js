@@ -14,12 +14,13 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:3000",
     "https://project-netaji.netlify.app",
+    "https://intelligentmanage.netlify.app",
     process.env.FRONTEND_URL,
   ].filter(Boolean),
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 204,
-  allowedHeaders: ["Content-Type", "Accept"],
+  allowedHeaders: ["Content-Type", "Accept", "Authorization"],
 };
 
 // Middleware

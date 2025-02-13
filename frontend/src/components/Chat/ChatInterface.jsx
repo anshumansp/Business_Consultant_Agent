@@ -172,7 +172,10 @@ const ChatInterface = () => {
         headers: {
           "Content-Type": "application/json",
           Accept: "text/event-stream",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
+        credentials: "include",
+        mode: "cors",
         body: JSON.stringify({
           messages: updatedMessages,
           systemPrompt: systemPrompt,

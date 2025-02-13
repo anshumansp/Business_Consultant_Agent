@@ -20,7 +20,11 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss:; img-src 'self' https: data:; font-src 'self' https: data:;"
+    Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: https://business-consultant-agent.onrender.com; img-src 'self' https: data:; font-src 'self' https: data:;"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    Access-Control-Allow-Credentials = "true"
 
 [[headers]]
   for = "/assets/*"
