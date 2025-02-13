@@ -11,12 +11,13 @@ const port = process.env.PORT || 3001;
 // CORS configuration
 const corsOptions = {
   origin: [
+    "https://intelligentmanage.netlify.app",
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://business-consultant-agent.onrender.com",
     "https://project-netaji.netlify.app",
-    "https://intelligentmanage.netlify.app",
     process.env.FRONTEND_URL,
-  ].filter(Boolean),
+  ],
   methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 204,
@@ -60,7 +61,11 @@ app.post("/api/chat", async (req, res) => {
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "https://intelligentmanage.netlify.app"
+    );
+    res.setHeader("Access-Control-Allow-Credentials", "true");
 
     try {
       for await (const chunk of completion) {
