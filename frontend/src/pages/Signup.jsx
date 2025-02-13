@@ -1,88 +1,120 @@
-import { Box, Stack, TextField, Typography, Button } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import {
+  Container,
+  TextField,
+  Typography,
+  Button,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { pink } from "@mui/material/colors";
 
-const Signup = ({ setShowLayout }) => {
-  const darkPink = pink[500];
-  const lightPink = pink[700];
+const Signup = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [creds, setCreds] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
+    setError("");
     setCreds({ ...creds, [e.target.name]: e.target.value });
+  };
+
+  const validateInputs = () => {
+    if (!creds.email || !creds.password || !creds.confirmPassword) {
+      setError("Please fill in all fields");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(creds.email)) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+    if (creds.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return false;
+    }
+    if (creds.password !== creds.confirmPassword) {
+      setError("Passwords do not match");
+      return false;
+    }
+    return true;
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setError("");
 
+    if (!validateInputs()) return;
+
+    setLoading(true);
     try {
-      const email = creds.email;
-      const password = creds.password;
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      const token = user.user.accessToken;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        creds.email.trim(),
+        creds.password
+      );
+
+      if (!userCredential.user) {
+        throw new Error("No user data received");
+      }
+
+      const token = await userCredential.user.getIdToken();
       localStorage.setItem("accessToken", token);
-      setShowLayout(true);
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      console.error("Signup error:", error.code, error.message);
+      let errorMessage = "An error occurred during signup";
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "This email is already registered";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address format";
+          break;
+        case "auth/operation-not-allowed":
+          errorMessage = "Email/password accounts are not enabled";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak";
+          break;
+        default:
+          errorMessage = error.message || "Failed to signup. Please try again.";
+      }
+      setError(errorMessage);
+      localStorage.removeItem("accessToken");
     } finally {
-      setCreds({
-        email: "",
-        password: "",
-      });
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      navigate("/");
-    }
-  }, []);
-
   return (
-    <Stack
-      py={{ xs: 6, md: 12, lg: 22 }}
-      px={{ xs: 2, md: 4, lg: 8 }}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        width={{ xs: "100%", md: "80%", lg: "50%" }}
-      >
-        <Typography
-          variant="h4"
-          fontWeight={600}
-          mb={2}
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-        >
-          Your Chatbot Account
+    <Container maxWidth="sm" sx={{ py: { xs: 6, md: 12 } }}>
+      <div style={{ textAlign: "center" }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Create Your Account
         </Typography>
-        <Typography
-          variant="body1"
-          color="#616161"
-          fontWeight={400}
-          fontSize="16px"
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-          lineHeight="30px"
-        >
-          <span style={{ fontWeight: 800, color: "#000" }}>Signup</span> to your
-          ChatBot application.
+        <Typography variant="body1" color="text.secondary" gutterBottom>
+          <span style={{ fontWeight: 800, color: "#000" }}>Sign up</span> to start using
+          the ChatBot application.
         </Typography>
 
-        <Box mt={4} width="80%">
+        {error && (
+          <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        <form onSubmit={handleSignup} style={{ marginTop: "2rem" }}>
           <TextField
             fullWidth
+            required
             margin="normal"
             variant="outlined"
             placeholder="Email"
@@ -90,9 +122,12 @@ const Signup = ({ setShowLayout }) => {
             name="email"
             value={creds.email}
             onChange={handleChange}
+            disabled={loading}
+            error={!!error && error.includes("email")}
           />
           <TextField
             fullWidth
+            required
             margin="normal"
             variant="outlined"
             placeholder="Password"
@@ -100,39 +135,48 @@ const Signup = ({ setShowLayout }) => {
             name="password"
             value={creds.password}
             onChange={handleChange}
+            disabled={loading}
+            error={!!error && error.includes("password")}
           />
-        </Box>
-      </Box>
+          <TextField
+            fullWidth
+            required
+            margin="normal"
+            variant="outlined"
+            placeholder="Confirm Password"
+            type="password"
+            name="confirmPassword"
+            value={creds.confirmPassword}
+            onChange={handleChange}
+            disabled={loading}
+            error={!!error && error.includes("match")}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            size="large"
+            disabled={loading}
+            sx={{
+              mt: 2,
+              bgcolor: pink[500],
+              "&:hover": {
+                bgcolor: pink[700],
+              },
+            }}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Sign Up"}
+          </Button>
+        </form>
 
-      <Box
-        pt={2}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        width={{ xs: "100%", md: "40%", lg: "30%" }}
-      >
-        <Button
-          component={Link}
-          to="/"
-          variant="contained"
-          size="large"
-          onClick={handleSignup}
-          sx={{
-            width: "80%",
-            backgroundColor: darkPink,
-            "&:hover": { backgroundColor: lightPink },
-          }}
-        >
-          Signup
-        </Button>
-        <Typography variant="body1" color="#616161" mt={2} textAlign="center">
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
           Already have an account?{" "}
           <Link to="/login" style={{ color: "#000" }}>
             Login Here
           </Link>
         </Typography>
-      </Box>
-    </Stack>
+      </div>
+    </Container>
   );
 };
 

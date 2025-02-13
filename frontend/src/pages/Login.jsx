@@ -1,88 +1,114 @@
-import { Box, Stack, TextField, Typography, Button } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import {
+  Container,
+  TextField,
+  Typography,
+  Button,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../firebase.config";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { pink } from "@mui/material/colors";
 
-const Login = ({ setShowLayout }) => {
-  const darkPink = pink[500];
-  const lightPink = pink[700];
+const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [creds, setCreds] = useState({
     email: "",
     password: "",
   });
 
   const handleChange = (e) => {
-    setCreds({ ...creds, [e.target.name]: e.target.value });
+    setError("");
+    setCreds((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const validateInputs = () => {
+    if (!creds.email || !creds.password) {
+      setError("Please fill in all fields");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(creds.email)) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+    if (creds.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return false;
+    }
+    return true;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
+
+    setLoading(true);
+    setError("");
 
     try {
-      const email = creds.email;
-      const password = creds.password;
-
-      const user = await signInWithEmailAndPassword(auth, email, password);
-      const token = user.user.accessToken;
-      localStorage.setItem("accessToken", token);
-      setCreds({
-        email: "",
-        password: "",
-      });
-      setShowLayout(true);
-      navigate("/");
+      const result = await window.handleLogin(creds.email, creds.password);
+      if (result.success) {
+        setCreds({ email: "", password: "" });
+        navigate("/");
+      } else {
+        throw result.error;
+      }
     } catch (error) {
-      console.log(error.message);
+      console.error("Login error:", error.code, error.message);
+      let errorMessage = "An error occurred during login";
+      switch (error.code) {
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address format";
+          break;
+        case "auth/user-disabled":
+          errorMessage =
+            "This account has been disabled. Please contact support.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No account found with this email";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many failed attempts. Please try again later.";
+          break;
+        case "auth/network-request-failed":
+          errorMessage =
+            "Network error. Please check your internet connection.";
+          break;
+        default:
+          errorMessage = error.message || "Failed to login. Please try again.";
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if(token) {
-        navigate("/")
-    } 
-  }, []);
-
   return (
-    <Stack
-      py={{ xs: 6, md: 12, lg: 22 }}
-      px={{ xs: 2, md: 4, lg: 8 }}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        width={{ xs: "100%", md: "80%", lg: "50%" }}
-      >
-        <Typography
-          variant="h4"
-          fontWeight={600}
-          mb={2}
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-        >
+    <Container maxWidth="sm" sx={{ py: { xs: 6, md: 12 } }}>
+      <div style={{ textAlign: "center" }}>
+        <Typography variant="h4" component="h1" gutterBottom>
           My Chatbot Account
         </Typography>
-        <Typography
-          variant="body1"
-          color="#616161"
-          fontWeight={400}
-          fontSize="16px"
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-          lineHeight="30px"
-        >
+        <Typography variant="body1" color="text.secondary" gutterBottom>
           <span style={{ fontWeight: 800, color: "#000" }}>Log in</span> to your
           ChatBot application.
         </Typography>
 
-        <Box mt={4} width="80%">
+        {error && (
+          <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        <form onSubmit={handleLogin} style={{ marginTop: "2rem" }}>
           <TextField
             fullWidth
+            required
             margin="normal"
             variant="outlined"
             placeholder="Email"
@@ -90,9 +116,12 @@ const Login = ({ setShowLayout }) => {
             name="email"
             value={creds.email}
             onChange={handleChange}
+            disabled={loading}
+            error={!!error && error.includes("email")}
           />
           <TextField
             fullWidth
+            required
             margin="normal"
             variant="outlined"
             placeholder="Password"
@@ -100,37 +129,35 @@ const Login = ({ setShowLayout }) => {
             name="password"
             value={creds.password}
             onChange={handleChange}
+            disabled={loading}
+            error={!!error && error.includes("password")}
           />
-        </Box>
-      </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            size="large"
+            disabled={loading}
+            sx={{
+              mt: 2,
+              bgcolor: pink[500],
+              "&:hover": {
+                bgcolor: pink[700],
+              },
+            }}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+          </Button>
+        </form>
 
-      <Box
-        pt={2}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        width={{ xs: "100%", md: "40%", lg: "30%" }}
-      >
-        <Button
-          component={Link}
-          to="/"
-          variant="contained"
-          size="large"
-          onClick={handleLogin}
-          sx={{ width: "80%", backgroundColor: darkPink, "&:hover" : {
-            backgroundColor: lightPink,
-          } }}
-        >
-          Login
-        </Button>
-        <Typography variant="body1" color="#616161" mt={2} textAlign="center">
+        <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
           Don't have an account?{" "}
           <Link to="/signup" style={{ color: "#000" }}>
             Signup Here
           </Link>
         </Typography>
-      </Box>
-    </Stack>
+      </div>
+    </Container>
   );
 };
 

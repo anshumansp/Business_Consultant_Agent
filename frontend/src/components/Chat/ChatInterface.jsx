@@ -5,6 +5,9 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { theme } from "../../utils/theme";
 import "./ChatInterface.css";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
+import { auth } from "../../firebase.config";
+import { signOut } from "firebase/auth";
 
 // Icons (you can replace these with actual SVG icons)
 const ChatIcon = () => (
@@ -90,6 +93,7 @@ const initialMessage = {
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const ChatInterface = () => {
+  const theme = useTheme();
   const [conversations, setConversations] = useState([
     { id: 1, title: "New Chat", messages: [initialMessage] },
   ]);
@@ -165,9 +169,9 @@ const ChatInterface = () => {
     try {
       const response = await fetch(`${apiUrl}/api/chat`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Accept": "text/event-stream",
+          Accept: "text/event-stream",
         },
         body: JSON.stringify({
           messages: updatedMessages,
@@ -242,9 +246,14 @@ const ChatInterface = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("accessToken");
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
@@ -288,8 +297,8 @@ const ChatInterface = () => {
                 style={{
                   background:
                     message.role === "assistant"
-                      ? theme.colors.background.paper
-                      : theme.colors.gradient.primary,
+                      ? theme.palette.background.paper
+                      : theme.palette.primary.main,
                 }}
               >
                 <div className="message-content">
@@ -340,8 +349,8 @@ const ChatInterface = () => {
               placeholder="Ask anything about business or technology..."
               className="chat-input"
               style={{
-                borderColor: theme.colors.primary.light,
-                color: theme.colors.text.primary,
+                borderColor: theme.palette.primary.light,
+                color: theme.palette.text.primary,
               }}
             />
             <button
@@ -349,7 +358,7 @@ const ChatInterface = () => {
               className="send-button"
               disabled={isLoading || !input.trim()}
               style={{
-                background: theme.colors.gradient.primary,
+                background: theme.palette.primary.main,
               }}
             >
               <SendIcon />

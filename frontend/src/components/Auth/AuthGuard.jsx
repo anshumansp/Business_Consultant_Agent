@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase.config";
 
 const AuthGuard = ({ children }) => {
   const navigate = useNavigate();
@@ -7,8 +8,8 @@ const AuthGuard = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        navigate("/login");
+      if (!accessToken || !auth.currentUser) {
+        navigate("/login", { replace: true });
       }
     };
 
@@ -17,7 +18,7 @@ const AuthGuard = ({ children }) => {
     // Add event listener for storage changes (handles multi-tab logout)
     const handleStorageChange = (e) => {
       if (e.key === "accessToken" && !e.newValue) {
-        navigate("/login");
+        navigate("/login", { replace: true });
       }
     };
 
