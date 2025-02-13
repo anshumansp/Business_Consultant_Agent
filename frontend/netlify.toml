@@ -8,10 +8,10 @@
   status = 200
 
 [context.production.environment]
-  VITE_API_URL = "https://your-production-backend-url.com"
+  VITE_API_URL = "https://business-consultant-agent.onrender.com"
 
 [context.deploy-preview.environment]
-  VITE_API_URL = "https://your-staging-backend-url.com"
+  VITE_API_URL = "https://business-consultant-agent.onrender.com"
 
 [[headers]]
   for = "/*"
