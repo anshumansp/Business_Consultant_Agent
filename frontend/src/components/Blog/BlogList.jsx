@@ -18,6 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { createApi } from 'unsplash-js';
+import { stripHtml, truncateText } from '../../utils/textUtils';
 
 // Initialize Unsplash API with environment variable
 const unsplash = createApi({
@@ -164,7 +165,7 @@ const BlogCard = memo(({ blog, image, isLoading, onClick }) => {
             lineHeight: 1.6,
           }}
         >
-          {blog.content}
+          {truncateText(stripHtml(blog.content), 200)}
         </Typography>
         <Box sx={{ 
           mt: 'auto', 
@@ -199,16 +200,36 @@ const BlogList = () => {
   const [blogs, setBlogs] = useState([]);
   const [blogImages, setBlogImages] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [timeoutError, setTimeoutError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = subscribeToBlogPosts(setBlogs);
-    return () => unsubscribe();
+    let timeoutId;
+    setIsLoading(true);
+    setTimeoutError(false);
+
+    // Set timeout for 15 seconds
+    timeoutId = setTimeout(() => {
+      if (blogs.length === 0) {
+        setTimeoutError(true);
+        setIsLoading(false);
+      }
+    }, 15000);
+
+    const unsubscribe = subscribeToBlogPosts((newBlogs) => {
+      setBlogs(newBlogs);
+      setIsLoading(false);
+      clearTimeout(timeoutId);
+    });
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
     const loadImages = async () => {
-      setIsLoading(true);
       try {
         const newImages = {};
         await Promise.all(
@@ -222,8 +243,6 @@ const BlogList = () => {
         setBlogImages(prev => ({ ...prev, ...newImages }));
       } catch (error) {
         console.error('Error loading images:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -295,7 +314,42 @@ const BlogList = () => {
           </Button>
         </Box>
 
-        {blogs.length === 0 && !isLoading ? (
+        {isLoading ? (
+          <Grid container spacing={3}>
+            {Array(3).fill(null).map((_, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <BlogCard isLoading={true} />
+              </Grid>
+            ))}
+          </Grid>
+        ) : timeoutError ? (
+          <Box sx={{ 
+            textAlign: 'center', 
+            mt: 8, 
+            p: 6, 
+            bgcolor: 'white',
+            borderRadius: 4,
+            boxShadow: '0 2px 12px rgba(0,0,0,0.05)'
+          }}>
+            <Typography variant="h5" sx={{ color: pink[700], fontWeight: 600, mb: 2 }}>
+              Unable to fetch blogs
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              There might be a connection issue. Please try again later.
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => window.location.reload()}
+              sx={{
+                color: pink[500],
+                borderColor: pink[200],
+                '&:hover': { borderColor: pink[500], bgcolor: pink[50] }
+              }}
+            >
+              Refresh Page
+            </Button>
+          </Box>
+        ) : blogs.length === 0 ? (
           <Box sx={{ 
             textAlign: 'center', 
             mt: 8, 
@@ -313,12 +367,12 @@ const BlogList = () => {
           </Box>
         ) : (
           <Grid container spacing={3}>
-            {(isLoading ? Array(3).fill({}) : blogs).map((blog, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={blog.id || index}>
+            {blogs.map((blog) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={blog.id}>
                 <BlogCard
                   blog={blog}
                   image={blogImages[blog.id]}
-                  isLoading={isLoading}
+                  isLoading={false}
                   onClick={() => navigate(`/blogs/${blog.id}`)}
                 />
               </Grid>

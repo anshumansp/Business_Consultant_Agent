@@ -20,12 +20,15 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.16.14",
     "@mui/material": "^5.15.10",
+    "@tinymce/tinymce-react": "^5.1.1",
     "firebase": "^11.3.1",
+    "marked": "^15.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-markdown": "^9.0.1",
+    "react-markdown": "^9.0.3",
     "react-router-dom": "^7.1.5",
-    "react-syntax-highlighter": "^15.5.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "remark-gfm": "^4.0.1",
     "unsplash-js": "^7.0.19"
   },
   "devDependencies": {

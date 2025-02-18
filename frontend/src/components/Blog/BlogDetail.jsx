@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, IconButton, Container, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@mui/material';
+import { Box, Typography, Button, IconButton, Container, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Paper, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBlogPost, toggleLike, deleteBlogPost } from '../../services/blogService';
 import { pink } from '@mui/material/colors';
@@ -16,7 +16,7 @@ const unsplash = createApi({
 // Function to get random image
 const getRandomImage = async () => {
   if (!import.meta.env.VITE_UNSPLASH_ACCESS_KEY) {
-    return `https://source.unsplash.com/1600x900/?business,technology&random=${Math.random()}`;
+    return '/assets/blogs.jpg';
   }
 
   try {
@@ -24,10 +24,15 @@ const getRandomImage = async () => {
       query: 'business technology',
       orientation: 'landscape',
     });
-    return result.response?.urls?.regular;
+    
+    if (!result.response?.urls?.regular) {
+      throw new Error('No image URL in response');
+    }
+    
+    return result.response.urls.regular;
   } catch (error) {
     console.warn('Failed to fetch Unsplash image:', error);
-    return `https://source.unsplash.com/1600x900/?business,technology&random=${Math.random()}`;
+    return '/assets/blogs.jpg';
   }
 };
 
@@ -140,16 +145,34 @@ const BlogDetail = () => {
           }
         }}
       >
-        <Box
-          component="img"
-          src={headerImage}
-          alt="Blog header"
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
+        {!headerImage ? (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              bgcolor: 'rgba(233, 30, 99, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <CircularProgress sx={{ color: pink[300] }} />
+          </Box>
+        ) : (
+          <Box
+            component="img"
+            src={headerImage}
+            alt="Blog header"
+            onError={(e) => {
+              e.target.src = '/assets/blogs.jpg';
+            }}
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        )}
         <Container
           sx={{
             position: 'absolute',
@@ -223,7 +246,7 @@ const BlogDetail = () => {
           zIndex: 2,
         }}
       >
-        <Box
+        <Paper
           sx={{
             bgcolor: 'white',
             p: { xs: 3, md: 6 },
@@ -231,21 +254,115 @@ const BlogDetail = () => {
             boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
           }}
         >
-          <Typography
-            variant="body1"
+          <Box
+            className="blog-content"
             sx={{
-              whiteSpace: 'pre-wrap',
-              lineHeight: 1.8,
-              color: '#2d3436',
-              fontSize: '1.1rem',
-              mb: 4,
+              '& img': {
+                maxWidth: '100%',
+                height: 'auto',
+                borderRadius: 2,
+                my: 2
+              },
+              '& h1, & h2, & h3, & h4, & h5, & h6': {
+                color: '#2d3436',
+                fontWeight: 600,
+                lineHeight: 1.3,
+                mt: 4,
+                mb: 2,
+                '&:first-child': {
+                  mt: 0
+                }
+              },
+              '& h1': { fontSize: '2.5rem' },
+              '& h2': { fontSize: '2rem' },
+              '& h3': { fontSize: '1.75rem' },
+              '& h4': { fontSize: '1.5rem' },
+              '& h5': { fontSize: '1.25rem' },
+              '& h6': { fontSize: '1.1rem' },
+              '& p': {
+                mb: 2,
+                lineHeight: 1.8,
+                fontSize: '1.1rem',
+                color: '#2d3436'
+              },
+              '& a': {
+                color: pink[500],
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'underline'
+                }
+              },
+              '& ul, & ol': {
+                mb: 2,
+                pl: 4,
+                '& li': {
+                  mb: 1,
+                  lineHeight: 1.7
+                }
+              },
+              '& blockquote': {
+                borderLeft: `4px solid ${pink[200]}`,
+                m: 0,
+                mb: 2,
+                pl: 3,
+                py: 1,
+                bgcolor: pink[50],
+                borderRadius: '0 4px 4px 0',
+                '& p': {
+                  m: 0
+                }
+              },
+              '& pre': {
+                mb: 2,
+                borderRadius: 2,
+                overflow: 'auto',
+                bgcolor: '#2d3436',
+                color: '#fff',
+                p: 2
+              },
+              '& code': {
+                fontFamily: 'monospace',
+                p: 0.5,
+                borderRadius: 1,
+                bgcolor: '#f5f5f5',
+                color: pink[700],
+                fontSize: '0.9em'
+              },
+              '& table': {
+                width: '100%',
+                mb: 2,
+                borderCollapse: 'collapse',
+                '& th, & td': {
+                  border: '1px solid #ddd',
+                  p: 1.5
+                },
+                '& th': {
+                  bgcolor: pink[50]
+                },
+                '& tr:nth-of-type(even)': {
+                  bgcolor: '#f8f9fa'
+                }
+              },
+              '& hr': {
+                my: 3,
+                border: 'none',
+                borderTop: `1px solid ${pink[100]}`
+              },
+              '& p:empty, & p:only-child:not(:has(*))': {
+                display: 'none'
+              }
             }}
-          >
-            {blog.content}
-          </Typography>
+            dangerouslySetInnerHTML={{ __html: blog.content }}
+          />
 
           {isAuthor && (
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              gap: 2,
+              mt: 6,
+              pt: 4,
+              borderTop: `1px solid ${pink[100]}`,
+            }}>
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/blogs/edit/${id}`)}
@@ -279,7 +396,7 @@ const BlogDetail = () => {
               </Button>
             </Box>
           )}
-        </Box>
+        </Paper>
       </Container>
 
       {/* Delete Confirmation Dialog */}
