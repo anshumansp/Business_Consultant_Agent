@@ -186,7 +186,7 @@ const BlogEditor = () => {
                 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                 'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
                 'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount',
-                'codesample'
+                'codesample', 'paste'
               ],
               toolbar: 'undo redo | blocks | ' +
                 'bold italic forecolor | alignleft aligncenter ' +
@@ -198,6 +198,7 @@ const BlogEditor = () => {
                   font-size: 16px;
                   line-height: 1.8;
                   color: #2d3436;
+                  padding: 1rem;
                 }
                 p { margin: 0 0 1em 0; }
                 h1, h2, h3, h4, h5, h6 { 
@@ -238,51 +239,51 @@ const BlogEditor = () => {
                   height: auto;
                   border-radius: 4px;
                 }
+                ul, ol {
+                  padding-left: 2em;
+                  margin: 0 0 1em 0;
+                }
+                li {
+                  margin-bottom: 0.5em;
+                }
+                ul li {
+                  list-style-type: disc;
+                }
+                ol li {
+                  list-style-type: decimal;
+                }
+                ul ul, ol ol, ul ol, ol ul {
+                  margin: 0.5em 0;
+                }
               `,
-              formats: {
-                alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-left' },
-                aligncenter: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-center' },
-                alignright: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-right' },
-                alignjustify: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'align-justify' }
-              },
-              style_formats: [
-                { title: 'Headers', items: [
-                  { title: 'Header 1', format: 'h1' },
-                  { title: 'Header 2', format: 'h2' },
-                  { title: 'Header 3', format: 'h3' },
-                  { title: 'Header 4', format: 'h4' },
-                  { title: 'Header 5', format: 'h5' },
-                  { title: 'Header 6', format: 'h6' }
-                ]},
-                { title: 'Inline', items: [
-                  { title: 'Bold', format: 'bold' },
-                  { title: 'Italic', format: 'italic' },
-                  { title: 'Underline', format: 'underline' },
-                  { title: 'Code', format: 'code' }
-                ]},
-                { title: 'Blocks', items: [
-                  { title: 'Paragraph', format: 'p' },
-                  { title: 'Blockquote', format: 'blockquote' },
-                  { title: 'Code Block', format: 'pre' }
-                ]}
-              ],
-              cleanup: true,
-              cleanup_on_startup: true,
-              valid_elements: '*[*]', // Allow all elements and attributes
-              extended_valid_elements: 'span[*]',
-              invalid_elements: 'script,iframe,applet,embed,form,input,select,textarea', // Security
-              entity_encoding: 'raw',
-              entities: '160,nbsp',
+              paste_as_text: false,
+              paste_enable_default_filters: true,
+              paste_word_valid_elements: "b,strong,i,em,h1,h2,h3,h4,h5,h6,p,ul,ol,li",
+              paste_retain_style_properties: "none",
+              lists_indent_on_tab: true,
+              forced_root_block: 'p',
+              remove_trailing_brs: false,
+              browser_spellcheck: true,
+              contextmenu: "link image table",
+              valid_elements: '*[*]',
+              valid_children: '+body[style],+li[p],+p',
+              extended_valid_elements: 'li[class|style],ul[class|style],ol[class|style],p,span[*]',
+              custom_elements: '~li,~ul,~ol',
               force_br_newlines: false,
               force_p_newlines: true,
-              forced_root_block: 'p',
-              remove_trailing_brs: true,
+              keep_styles: true,
+              entity_encoding: 'raw',
+              cleanup: false,
+              cleanup_on_startup: false,
               convert_urls: false,
               relative_urls: false,
               remove_script_host: true,
               end_container_on_empty_block: true,
-              custom_elements: '',
-              valid_children: '+body[style]',
+              indent: true,
+              indent_use_margin: false,
+              indent_margin: false,
+              advlist_bullet_styles: 'disc,circle,square',
+              advlist_number_styles: 'default,lower-alpha,lower-roman,upper-alpha,upper-roman',
             }}
           />
         </Box>
