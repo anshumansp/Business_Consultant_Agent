@@ -281,8 +281,8 @@ const ChatInterface = () => {
           ))}
         </div>
         <div className="user-section">
-          <button className="account-btn">
-            <UserIcon /> Account
+          <button className="account-btn" onClick={() => navigate('/blogs')}>
+            <UserIcon /> Blogs
           </button>
           <button className="logout-btn" onClick={handleLogout}>
             <LogoutIcon /> Logout

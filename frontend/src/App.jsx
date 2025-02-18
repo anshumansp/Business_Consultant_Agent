@@ -4,6 +4,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ChatInterface from "./components/Chat/ChatInterface";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import BlogList from "./components/Blog/BlogList";
+import BlogEditor from "./components/Blog/BlogEditor";
+import BlogDetail from "./components/Blog/BlogDetail";
 import { theme } from "./utils/theme";
 import { auth } from "./firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -119,6 +122,22 @@ const App = () => {
               <Navigate to="/login" />
             )
           }
+        />
+        <Route
+          path="/blogs"
+          element={isAuthenticated ? <BlogList /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/blogs/create"
+          element={isAuthenticated ? <BlogEditor /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/blogs/edit/:id"
+          element={isAuthenticated ? <BlogEditor /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/blogs/:id"
+          element={isAuthenticated ? <BlogDetail /> : <Navigate to="/login" />}
         />
       </Routes>
     </ThemeProvider>
