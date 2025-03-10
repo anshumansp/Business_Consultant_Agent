@@ -126,34 +126,35 @@ const BlogDetail = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: "#f8f9fa", minHeight: "100vh" }}>
       {/* Header Image */}
       <Box
         sx={{
-          position: 'relative',
-          height: '400px',
-          width: '100%',
-          overflow: 'hidden',
-          '&::after': {
+          position: "relative",
+          height: { xs: "300px", sm: "350px", md: "400px" },
+          width: "100%",
+          overflow: "hidden",
+          "&::after": {
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))',
-          }
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))",
+          },
         }}
       >
         {!headerImage ? (
           <Box
             sx={{
-              width: '100%',
-              height: '100%',
-              bgcolor: 'rgba(233, 30, 99, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              width: "100%",
+              height: "100%",
+              bgcolor: "rgba(233, 30, 99, 0.1)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <CircularProgress sx={{ color: pink[300] }} />
@@ -164,42 +165,43 @@ const BlogDetail = () => {
             src={headerImage}
             alt="Blog header"
             onError={(e) => {
-              e.target.src = '/assets/blogs.jpg';
+              e.target.src = "/assets/blogs.jpg";
             }}
             sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
             }}
           />
         )}
         <Container
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            left: "50%",
+            transform: "translateX(-50%)",
             zIndex: 1,
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            color: 'white',
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            color: "white",
+            py: { xs: 4, sm: 5, md: 6 },
           }}
         >
           <IconButton
-            onClick={() => navigate('/blogs')}
+            onClick={() => navigate("/blogs")}
             sx={{
-              color: 'white',
-              position: 'absolute',
-              top: 20,
-              left: 24,
-              bgcolor: 'rgba(255,255,255,0.1)',
-              '&:hover': {
-                bgcolor: 'rgba(255,255,255,0.2)',
-                transform: 'scale(1.1)',
+              color: "white",
+              position: "absolute",
+              top: { xs: 16, sm: 20, md: 24 },
+              left: { xs: 16, sm: 20, md: 24 },
+              bgcolor: "rgba(255,255,255,0.1)",
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.2)",
+                transform: "scale(1.1)",
               },
-              transition: 'all 0.2s ease-in-out',
+              transition: "all 0.2s ease-in-out",
             }}
           >
             <ArrowBackIcon />
@@ -209,28 +211,55 @@ const BlogDetail = () => {
             component="h1"
             sx={{
               fontWeight: 700,
-              textShadow: '0 2px 4px rgba(0,0,0,0.3)',
-              mb: 2,
+              textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+              mb: { xs: 1.5, sm: 2 },
+              fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
+              px: { xs: 2, sm: 0 },
+              textAlign: { xs: "center", sm: "left" },
             }}
           >
             {blog.title}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="subtitle1">
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexDirection: { xs: "column", sm: "row" },
+              px: { xs: 2, sm: 0 },
+              alignItems: { xs: "center", sm: "flex-start" },
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontSize: { xs: "0.9rem", sm: "1rem" },
+                textAlign: { xs: "center", sm: "left" },
+              }}
+            >
               {formatDate(blog.createdAt)}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mt: { xs: 1, sm: 0 },
+              }}
+            >
               <IconButton
                 onClick={handleLike}
                 disabled={isLiked}
                 sx={{
-                  color: isLiked ? pink[300] : 'white',
-                  '&:hover': { color: pink[300] },
+                  color: isLiked ? pink[300] : "white",
+                  "&:hover": { color: pink[300] },
+                  padding: { xs: 0.5, sm: 1 },
                 }}
               >
                 <HeartIcon filled={isLiked} />
               </IconButton>
-              <Typography>{blog.likes || 0}</Typography>
+              <Typography sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}>
+                {blog.likes || 0}
+              </Typography>
             </Box>
           </Box>
         </Container>
@@ -240,138 +269,141 @@ const BlogDetail = () => {
       <Container
         maxWidth="md"
         sx={{
-          mt: -6,
+          mt: { xs: -4, sm: -5, md: -6 },
           mb: 6,
-          position: 'relative',
+          position: "relative",
           zIndex: 2,
+          px: { xs: 2, sm: 3, md: 4 },
         }}
       >
         <Paper
           sx={{
-            bgcolor: 'white',
+            bgcolor: "white",
             p: { xs: 3, md: 6 },
             borderRadius: 4,
-            boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
+            boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
           }}
         >
           <Box
             className="blog-content"
             sx={{
-              '& img': {
-                maxWidth: '100%',
-                height: 'auto',
+              "& img": {
+                maxWidth: "100%",
+                height: "auto",
                 borderRadius: 2,
-                my: 2
+                my: 2,
               },
-              '& h1, & h2, & h3, & h4, & h5, & h6': {
-                color: '#2d3436',
+              "& h1, & h2, & h3, & h4, & h5, & h6": {
+                color: "#2d3436",
                 fontWeight: 600,
                 lineHeight: 1.3,
                 mt: 4,
                 mb: 2,
-                '&:first-child': {
-                  mt: 0
-                }
+                "&:first-child": {
+                  mt: 0,
+                },
               },
-              '& h1': { fontSize: '2.5rem' },
-              '& h2': { fontSize: '2rem' },
-              '& h3': { fontSize: '1.75rem' },
-              '& h4': { fontSize: '1.5rem' },
-              '& h5': { fontSize: '1.25rem' },
-              '& h6': { fontSize: '1.1rem' },
-              '& p': {
+              "& h1": { fontSize: "2.5rem" },
+              "& h2": { fontSize: "2rem" },
+              "& h3": { fontSize: "1.75rem" },
+              "& h4": { fontSize: "1.5rem" },
+              "& h5": { fontSize: "1.25rem" },
+              "& h6": { fontSize: "1.1rem" },
+              "& p": {
                 mb: 2,
                 lineHeight: 1.8,
-                fontSize: '1.1rem',
-                color: '#2d3436'
+                fontSize: "1.1rem",
+                color: "#2d3436",
               },
-              '& a': {
+              "& a": {
                 color: pink[500],
-                textDecoration: 'none',
-                '&:hover': {
-                  textDecoration: 'underline'
-                }
+                textDecoration: "none",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
               },
-              '& ul, & ol': {
+              "& ul, & ol": {
                 mb: 2,
                 pl: 4,
-                '& li': {
+                "& li": {
                   mb: 1,
-                  lineHeight: 1.7
-                }
+                  lineHeight: 1.7,
+                },
               },
-              '& blockquote': {
+              "& blockquote": {
                 borderLeft: `4px solid ${pink[200]}`,
                 m: 0,
                 mb: 2,
                 pl: 3,
                 py: 1,
                 bgcolor: pink[50],
-                borderRadius: '0 4px 4px 0',
-                '& p': {
-                  m: 0
-                }
+                borderRadius: "0 4px 4px 0",
+                "& p": {
+                  m: 0,
+                },
               },
-              '& pre': {
+              "& pre": {
                 mb: 2,
                 borderRadius: 2,
-                overflow: 'auto',
-                bgcolor: '#2d3436',
-                color: '#fff',
-                p: 2
+                overflow: "auto",
+                bgcolor: "#2d3436",
+                color: "#fff",
+                p: 2,
               },
-              '& code': {
-                fontFamily: 'monospace',
+              "& code": {
+                fontFamily: "monospace",
                 p: 0.5,
                 borderRadius: 1,
-                bgcolor: '#f5f5f5',
+                bgcolor: "#f5f5f5",
                 color: pink[700],
-                fontSize: '0.9em'
+                fontSize: "0.9em",
               },
-              '& table': {
-                width: '100%',
+              "& table": {
+                width: "100%",
                 mb: 2,
-                borderCollapse: 'collapse',
-                '& th, & td': {
-                  border: '1px solid #ddd',
-                  p: 1.5
+                borderCollapse: "collapse",
+                "& th, & td": {
+                  border: "1px solid #ddd",
+                  p: 1.5,
                 },
-                '& th': {
-                  bgcolor: pink[50]
+                "& th": {
+                  bgcolor: pink[50],
                 },
-                '& tr:nth-of-type(even)': {
-                  bgcolor: '#f8f9fa'
-                }
+                "& tr:nth-of-type(even)": {
+                  bgcolor: "#f8f9fa",
+                },
               },
-              '& hr': {
+              "& hr": {
                 my: 3,
-                border: 'none',
-                borderTop: `1px solid ${pink[100]}`
+                border: "none",
+                borderTop: `1px solid ${pink[100]}`,
               },
-              '& p:empty, & p:only-child:not(:has(*))': {
-                display: 'none'
-              }
+              "& p:empty, & p:only-child:not(:has(*))": {
+                display: "none",
+              },
             }}
             dangerouslySetInnerHTML={{ __html: blog.content }}
           />
 
           {isAuthor && (
-            <Box sx={{ 
-              display: 'flex', 
-              gap: 2,
-              mt: 6,
-              pt: 4,
-              borderTop: `1px solid ${pink[100]}`,
-            }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                mt: 6,
+                pt: 4,
+                borderTop: `1px solid ${pink[100]}`,
+              }}
+            >
               <Button
                 variant="outlined"
                 onClick={() => navigate(`/blogs/edit/${id}`)}
                 sx={{
                   borderRadius: 3,
-                  textTransform: 'none',
+                  textTransform: "none",
                   borderColor: pink[500],
                   color: pink[500],
-                  '&:hover': {
+                  "&:hover": {
                     borderColor: pink[700],
                     bgcolor: pink[50],
                   },
@@ -386,9 +418,9 @@ const BlogDetail = () => {
                 startIcon={<DeleteIcon />}
                 sx={{
                   borderRadius: 3,
-                  textTransform: 'none',
-                  '&:hover': {
-                    bgcolor: '#ffebee',
+                  textTransform: "none",
+                  "&:hover": {
+                    bgcolor: "#ffebee",
                   },
                 }}
               >
@@ -410,25 +442,28 @@ const BlogDetail = () => {
           },
         }}
       >
-        <DialogTitle sx={{ 
-          fontWeight: 600,
-          color: '#2d3436'
-        }}>
+        <DialogTitle
+          sx={{
+            fontWeight: 600,
+            color: "#2d3436",
+          }}
+        >
           Delete Blog Post
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this blog post? This action cannot be undone.
+            Are you sure you want to delete this blog post? This action cannot
+            be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2, pt: 0 }}>
           <Button
             onClick={() => setDeleteDialogOpen(false)}
             sx={{
-              textTransform: 'none',
-              color: '#636e72',
-              '&:hover': {
-                bgcolor: '#f8f9fa',
+              textTransform: "none",
+              color: "#636e72",
+              "&:hover": {
+                bgcolor: "#f8f9fa",
               },
             }}
           >
@@ -439,7 +474,7 @@ const BlogDetail = () => {
             variant="contained"
             color="error"
             sx={{
-              textTransform: 'none',
+              textTransform: "none",
               borderRadius: 2,
               px: 3,
             }}
