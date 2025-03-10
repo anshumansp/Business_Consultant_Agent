@@ -64,12 +64,18 @@ const getRandomImage = async () => {
 
 // Memoized BlogCard component to prevent unnecessary re-renders
 const BlogCard = memo(({ blog, image, isLoading, onClick }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
   const formatDate = (timestamp) => {
-    if (!timestamp) return '';
-    return new Date(timestamp.seconds * 1000).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    if (!timestamp) return "";
+    return new Date(timestamp.seconds * 1000).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -77,25 +83,34 @@ const BlogCard = memo(({ blog, image, isLoading, onClick }) => {
     return (
       <Card
         sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
           borderRadius: 3,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         <Skeleton
           variant="rectangular"
           height={180}
           animation="wave"
-          sx={{ bgcolor: 'rgba(233, 30, 99, 0.1)' }}
+          sx={{ bgcolor: "rgba(233, 30, 99, 0.1)" }}
         />
-        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2.5 }}>
+        <CardContent
+          sx={{ flexGrow: 1, display: "flex", flexDirection: "column", p: 2.5 }}
+        >
           <Skeleton variant="text" width="80%" height={28} sx={{ mb: 1 }} />
           <Skeleton variant="text" width="100%" height={16} />
           <Skeleton variant="text" width="100%" height={16} />
           <Skeleton variant="text" width="60%" height={16} />
-          <Box sx={{ mt: 'auto', pt: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              mt: "auto",
+              pt: 2,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <Skeleton variant="text" width="30%" />
             <Skeleton variant="text" width="20%" />
           </Box>
@@ -107,46 +122,68 @@ const BlogCard = memo(({ blog, image, isLoading, onClick }) => {
   return (
     <Card
       sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        cursor: 'pointer',
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        cursor: "pointer",
         borderRadius: 3,
-        overflow: 'hidden',
-        transform: 'translateZ(0)', // Force GPU acceleration
-        willChange: 'transform', // Optimize animations
-        '&:hover': { 
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+        overflow: "hidden",
+        transform: "translateZ(0)", // Force GPU acceleration
+        willChange: "transform", // Optimize animations
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
         },
-        transition: 'transform 0.2s ease-out, box-shadow 0.2s ease-out',
+        transition: "transform 0.2s ease-out, box-shadow 0.2s ease-out",
       }}
       onClick={onClick}
     >
-      <CardMedia
-        component="img"
-        height={180}
-        image={image}
-        alt={blog.title}
-        sx={{ 
-          objectFit: 'cover',
-          bgcolor: 'rgba(233, 30, 99, 0.1)',
+      <Box sx={{ position: "relative", height: 180 }}>
+        {!imageLoaded && (
+          <Skeleton
+            variant="rectangular"
+            height={180}
+            animation="wave"
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bgcolor: "rgba(233, 30, 99, 0.1)",
+              zIndex: 1,
+            }}
+          />
+        )}
+        <CardMedia
+          component="img"
+          height={180}
+          image={image}
+          alt={blog.title}
+          onLoad={handleImageLoad}
+          sx={{
+            objectFit: "cover",
+            bgcolor: "rgba(233, 30, 99, 0.1)",
+            opacity: imageLoaded ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
+          }}
+        />
+      </Box>
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          p: 2.5,
         }}
-      />
-      <CardContent sx={{ 
-        flexGrow: 1, 
-        display: 'flex', 
-        flexDirection: 'column',
-        p: 2.5,
-      }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
+      >
+        <Typography
+          variant="h6"
+          sx={{
             mb: 1.5,
             fontWeight: 600,
-            fontSize: '1.1rem',
+            fontSize: "1.1rem",
             lineHeight: 1.4,
-            color: '#2d3436',
+            color: "#2d3436",
           }}
         >
           {blog.title}
@@ -155,36 +192,40 @@ const BlogCard = memo(({ blog, image, isLoading, onClick }) => {
           variant="body2"
           sx={{
             mb: 2,
-            color: '#636e72',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
+            color: "#636e72",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
             WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            fontSize: '0.875rem',
+            WebkitBoxOrient: "vertical",
+            fontSize: "0.875rem",
             lineHeight: 1.6,
           }}
         >
           {truncateText(stripHtml(blog.content), 200)}
         </Typography>
-        <Box sx={{ 
-          mt: 'auto', 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          pt: 1.5,
-          borderTop: 1,
-          borderColor: 'rgba(0,0,0,0.05)'
-        }}>
-          <Typography variant="caption" sx={{ color: '#636e72' }}>
+        <Box
+          sx={{
+            mt: "auto",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pt: 1.5,
+            borderTop: 1,
+            borderColor: "rgba(0,0,0,0.05)",
+          }}
+        >
+          <Typography variant="caption" sx={{ color: "#636e72" }}>
             {formatDate(blog.createdAt)}
           </Typography>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 0.5,
-            color: pink[500]
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              color: pink[500],
+            }}
+          >
             <FavoriteIcon sx={{ fontSize: 14 }} />
             <Typography variant="caption" sx={{ fontWeight: 500 }}>
               {blog.likes || 0}

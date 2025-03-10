@@ -95,7 +95,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const ChatInterface = () => {
   const theme = useTheme();
   const [conversations, setConversations] = useState([
-    { id: 1, title: "New Chat", messages: [initialMessage] },
+    { id: 1, title: "Start a new chat", messages: [initialMessage] },
   ]);
   const [currentConversation, setCurrentConversation] = useState(1);
   const [input, setInput] = useState("");
@@ -263,7 +263,7 @@ const ChatInterface = () => {
     <div className="app-container">
       <aside className="sidebar">
         <button className="new-chat-btn" onClick={createNewChat}>
-          <ChatIcon /> New Chat
+          <ChatIcon /> Your Chats
         </button>
         <div className="conversations-list">
           {conversations.map((conv) => (
